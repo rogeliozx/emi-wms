@@ -100,7 +100,7 @@ material-dashboard-react
 └── src
     ├── index.js
     ├── logo.svg
-    ├── routes.js
+    ├── admin-routes.js
     ├── assets
     │   ├── css
     │   │   └── material-dashboard-react.css
