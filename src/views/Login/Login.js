@@ -111,13 +111,6 @@ export default function SignInSide(){
             >
               Iniciar
             </Button>
-            {/*<Grid container>*/}
-            {/*  <Grid item>*/}
-            {/*    <Link href="#" variant="body2">*/}
-            {/*      {'¿No tienes una cuenta? Create una'}*/}
-            {/*    </Link>*/}
-            {/*  </Grid>*/}
-            {/*</Grid>*/}
           </form>
         </div>
       </Grid>
