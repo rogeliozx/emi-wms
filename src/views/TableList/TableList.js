@@ -42,7 +42,7 @@ function downloadCSV(array){
 }
 
 const Export = ({onExport}) => (
-  <Button color='primary'  onClick={e => onExport(e.target.value)}>Export</Button>
+  <Button variant="contained"  color="primary"  onClick={e => onExport(e.target.value)}>Export</Button>
 );
 
 const TableList = ({data, columns, title}) => {

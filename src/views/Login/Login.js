@@ -61,8 +61,8 @@ export default function SignInSide(){
 
   const handleSubmit = e => {
     if(credentials.user !== '' && credentials.password !== '') {
-      hist.push('/admin/dashboard');
-      hist.go('/admin/dashboard')
+      hist.push('/admin/lpn');
+      hist.go('/admin/lpn')
     }
   };
 
