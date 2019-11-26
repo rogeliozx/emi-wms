@@ -46,7 +46,6 @@ export default function Admin({...rest}){
   const [color, setColor] = useState('blue');
   const [fixedClasses, setFixedClasses] = useState('dropdown show');
   const [mobileOpen, setMobileOpen] = useState(false);
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
