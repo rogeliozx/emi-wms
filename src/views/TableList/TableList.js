@@ -59,7 +59,7 @@ const TableList = ({ data, columns, title }) => {
       columns={columns}
       data={data}
       actions={actionsMemo}
-      selectableRows
+  
     />
   );
 };
