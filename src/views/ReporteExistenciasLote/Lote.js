@@ -60,6 +60,8 @@ export default function ExistenciasLote() {
   };
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+//TODO: Volver un componente el Datepicker porque se repite mucho
+
   return (
     <Fragment>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
