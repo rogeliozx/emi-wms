@@ -2,7 +2,10 @@ import React, { useState, useEffect, Fragment } from "react";
 import TableList from "../TableList/TableList";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
-import {MuiPickersUtilsProvider,KeyboardDatePicker} from "@material-ui/pickers";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker
+} from "@material-ui/pickers";
 import "date-fns";
 
 export default function ExistenciasLote() {
@@ -60,7 +63,7 @@ export default function ExistenciasLote() {
   };
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-//TODO: Volver un componente el Datepicker porque se repite mucho
+  //TODO: Volver un componente el Datepicker porque se repite mucho
 
   return (
     <Fragment>
