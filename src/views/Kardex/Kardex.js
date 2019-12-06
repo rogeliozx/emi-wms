@@ -12,46 +12,10 @@ import Select from "react-select";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
-import Csv from '../../layouts/csv';
+import Csv from "../../layouts/csv";
 
 const optionsKardex = [];
 export default function Kardex() {
-  const hist = createBrowserHistory();
-  let list;
-  let listToOptions = {
-    value: "",
-    label: ""
-  };
-  useEffect(() => {
-    list = JSON.parse(localStorage.getItem("Data"));
-    console.log(list);
-    if (!list) {
-      hist.push("/auth/login");
-      hist.go("/auth/login");
-    }
-    if(optionsKardex.length<=0){
-    list.map(data => {
-      data.listaCedisEmpresaDto.map((cedis,index) => {
-       
-        listToOptions.value = cedis;
-        listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
-          optionsKardex.push(listToOptions);
-
-         listToOptions = {
-          value: "",
-          label: ""
-        };
-      });
-      
-    });
-  }
-  }, [firstDate, secondDate, lpn,save]);
-
-  const [firstDate, setFirstDate] = useState(new Date());
-  const [secondDate, setSecondDate] = useState(new Date());
-  const [lpn, saveLpn] = useState({});
-  const [cedis, saveCedis] = useState([]);
-  const [save,wasSave]=useState(false)
   const columns = [
     {
       name: "ProvPartNum",
@@ -104,45 +68,75 @@ export default function Kardex() {
       sortable: true
     }
   ];
+  const namesCsv = [];
+  if (namesCsv.length <= 0) {
+    columns.map(data => {
+      namesCsv.push([data.name, data.selector]);
+    });
+  }
+  const hist = createBrowserHistory();
+  let list;
+  let listToOptions = {
+    value: "",
+    label: ""
+  };
+  useEffect(() => {
+    list = JSON.parse(localStorage.getItem("Data"));
+    if (!list) {
+      hist.push("/auth/login");
+      hist.go("/auth/login");
+    }
+    if (optionsKardex.length <= 0) {
+      list.map(data => {
+        data.listaCedisEmpresaDto.map((cedis, index) => {
+          listToOptions.value = cedis;
+          listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
+          optionsKardex.push(listToOptions);
+
+          listToOptions = {
+            value: "",
+            label: ""
+          };
+        });
+      });
+    }
+  }, [firstDate, secondDate, lpn]);
+
+  const [firstDate, setFirstDate] = useState(new Date());
+  const [secondDate, setSecondDate] = useState(new Date());
+  const [lpn, saveLpn] = useState({});
+  const [cedis, saveCedis] = useState([]);
   const initialDate = date => {
     setFirstDate(date);
   };
-  const lastDate = date => {
-    setSecondDate(date);
-  };
   let cedisEntreprise = {};
-  const selectValue = cedis => {  
-  if(cedis){
-    cedisEntreprise = cedis.map(data => {
-      return data.value;
-    });
-  saveCedis(cedisEntreprise);
-  }
-   
+  const selectValue = cedis => {
+    if (cedis) {
+      cedisEntreprise = cedis.map(data => {
+        return data.value;
+      });
+      saveCedis(cedisEntreprise);
+    }
   };
 
   const _fechasReportesDto = {
     fechaInicial: "",
-    fechaFinal: "",
-     listaCedisEmpresa: []
+    listaCedisEmpresa: []
   };
-  const getData =  () => {
+  const getData = () => {
     _fechasReportesDto.fechaInicial = formatDate(firstDate);
-    _fechasReportesDto.fechaFinal = formatDate(secondDate);
-    _fechasReportesDto.listaCedisEmpresa=cedis;
-    console.log(_fechasReportesDto);
-   axios.post("http://localhost:3001/reposent/kardex", _fechasReportesDto)
-   .then(result => {
-     console.log(result)
-    const  {data}=result
-    if(data){
-      saveLpn(data);
-    }
-  }).catch(e=>{
-    console.log(e);
-  })
-  ;
-     
+    _fechasReportesDto.listaCedisEmpresa = cedis;
+    axios
+      .post("http://192.168.2.10:3001/reposent/kardex", _fechasReportesDto)
+      .then(result => {
+        const { data } = result;
+        if (data) {
+          saveLpn(data);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   function formatDate(date) {
@@ -173,21 +167,7 @@ export default function Kardex() {
               }}
             />
           </Grid>
-          <Grid item xs={6}>
-            <KeyboardDatePicker
-              disableToolbar
-              variant="inline"
-              format="MM/dd/yyyy"
-              margin="normal"
-              id="date-picker-inline"
-              label="Date picker inline"
-              value={secondDate}
-              onChange={lastDate}
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-            />
-          </Grid>
+          <Grid item xs={6}></Grid>
           <Grid item xs={6}>
             <Select
               options={optionsKardex}
@@ -206,18 +186,13 @@ export default function Kardex() {
               <SearchIcon />
             </Button>
           </Grid>
-          <Grid item xs={9}>
-          </Grid>
+          <Grid item xs={9}></Grid>
           <Grid item xs={3}>
-              <Csv
-              data={lpn}
-              />
+            <Csv namesCsv={namesCsv} data={lpn} />
           </Grid>
         </Grid>
       </MuiPickersUtilsProvider>
-      <TableList columns={columns}
-      data={lpn}
-      title={"Reporte existencias LPN"} />
+      <TableList columns={columns} data={lpn} />
     </Fragment>
   );
 }

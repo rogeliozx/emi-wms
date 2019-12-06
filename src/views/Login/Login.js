@@ -65,16 +65,19 @@ export default function SignInSide() {
   };
   const handleSubmit = async e => {
     await axios
-      .post("http://localhost:3001/login/validausuario", usuarioDto)
+      .post("http://192.168.2.10:3001/login/validausuario", usuarioDto)
       .then(result => {
         const { data } = result;
         const { listaProcesoCedisEmpresaDto } = data;
-        localStorage.setItem("Data", JSON.stringify(listaProcesoCedisEmpresaDto));
+        localStorage.setItem(
+          "Data",
+          JSON.stringify(listaProcesoCedisEmpresaDto)
+        );
         hist.push("/admin/lpn");
-       hist.go("/admin/lpn");
+        hist.go("/admin/lpn");
       })
       .catch(e => {
-        console.log(e)
+        console.log(e);
         saveErrror(true);
       });
   };

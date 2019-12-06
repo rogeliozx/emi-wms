@@ -12,43 +12,10 @@ import Select from "react-select";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
-import Csv from '../../layouts/csv';
-
+import Csv from "../../layouts/csv";
 
 const optionsLote = [];
 export default function ExistenciasLote() {
-  const hist = createBrowserHistory();
-  let list;
-  let listToOptions = {
-    value: "",
-    label: ""
-  };
-  useEffect(() => {
-    list = JSON.parse(localStorage.getItem("Data"));
-    console.log(list);
-    if (!list) {
-      hist.push("/auth/login");
-      hist.go("/auth/login");
-    }
-    if(optionsLote.length<=0){
-      list.map(data => {
-        data.listaCedisEmpresaDto.map(cedis => {
-          listToOptions.value = cedis;
-          listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
-          optionsLote.push(listToOptions);
-          listToOptions = {
-            value: "",
-            label: ""
-          };
-        });
-      });
-    }
-  }, [firstDate, secondDate, lpn]);
-
-  const [firstDate, setFirstDate] = useState(new Date());
-  const [secondDate, setSecondDate] = useState(new Date());
-  const [lpn, saveLpn] = useState({});
-  const [cedis, saveCedis] = useState([]);
   const columns = [
     {
       name: "PropPartNum",
@@ -81,6 +48,43 @@ export default function ExistenciasLote() {
       sortable: true
     }
   ];
+  const namesCsv = [];
+  if (namesCsv.length <= 0) {
+    columns.map(data => {
+      namesCsv.push([data.name, data.selector]);
+    });
+  }
+  const hist = createBrowserHistory();
+  let list;
+  let listToOptions = {
+    value: "",
+    label: ""
+  };
+  useEffect(() => {
+    list = JSON.parse(localStorage.getItem("Data"));
+    if (!list) {
+      hist.push("/auth/login");
+      hist.go("/auth/login");
+    }
+    if (optionsLote.length <= 0) {
+      list.map(data => {
+        data.listaCedisEmpresaDto.map(cedis => {
+          listToOptions.value = cedis;
+          listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
+          optionsLote.push(listToOptions);
+          listToOptions = {
+            value: "",
+            label: ""
+          };
+        });
+      });
+    }
+  }, [firstDate, secondDate, lpn]);
+
+  const [firstDate, setFirstDate] = useState(new Date());
+  const [secondDate, setSecondDate] = useState(new Date());
+  const [lpn, saveLpn] = useState({});
+  const [cedis, saveCedis] = useState([]);
   const initialDate = date => {
     setFirstDate(date);
   };
@@ -89,37 +93,37 @@ export default function ExistenciasLote() {
   };
   let cedisEntreprise = {};
   const selectValue = cedis => {
-  if(cedis){
-    cedisEntreprise = cedis.map(data => {
-      return data.value;
-    });
-  saveCedis(cedisEntreprise);
-  }
-   
+    if (cedis) {
+      cedisEntreprise = cedis.map(data => {
+        return data.value;
+      });
+      saveCedis(cedisEntreprise);
+    }
   };
 
   const _fechasReportesDto = {
     fechaInicial: "",
     fechaFinal: "",
-     listaCedisEmpresa: []
+    listaCedisEmpresa: []
   };
-  const getData =  () => {
+  const getData = () => {
     _fechasReportesDto.fechaInicial = formatDate(firstDate);
     _fechasReportesDto.fechaFinal = formatDate(secondDate);
-    _fechasReportesDto.listaCedisEmpresa=cedis;
-    console.log(_fechasReportesDto);
-   axios.post("http://localhost:3001/reposent/existenciaslote", _fechasReportesDto)
-   .then(result => {
-     console.log(result)
-    const  {data}=result
-    if(data){
-      saveLpn(data);
-    }
-  }).catch(e=>{
-    console.log(e);
-  })
-  ;
-     
+    _fechasReportesDto.listaCedisEmpresa = cedis;
+    axios
+      .post(
+        "http://192.168.2.10:3001/reposent/existenciaslote",
+        _fechasReportesDto
+      )
+      .then(result => {
+        const { data } = result;
+        if (data) {
+          saveLpn(data);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   function formatDate(date) {
@@ -183,18 +187,13 @@ export default function ExistenciasLote() {
               <SearchIcon />
             </Button>
           </Grid>
-          <Grid item xs={9}>
-          </Grid>
+          <Grid item xs={9}></Grid>
           <Grid item xs={3}>
-              <Csv
-              data={lpn}
-              />
+            <Csv namesCsv={namesCsv} data={lpn} />
           </Grid>
         </Grid>
       </MuiPickersUtilsProvider>
-      <TableList columns={columns}
-      data={lpn}
-      title={"Reporte existencias LPN"} />
+      <TableList columns={columns} data={lpn} />
     </Fragment>
   );
 }

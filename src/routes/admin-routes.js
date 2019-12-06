@@ -17,7 +17,7 @@ const adminRoutes = [
   },
   {
     path: '/pulled',
-    name: 'Reporte Pullet',
+    name: 'Reporte Pulled',
     icon: 'content_paste',
     component: Pulled,
     layout: '/admin'

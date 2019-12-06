@@ -16,38 +16,6 @@ import Csv from '../../layouts/csv';
 
 const optionsPulled = [];
 export default function Pulled(){
-  const hist = createBrowserHistory();
-  let list;
-  let listToOptions = {
-    value: "",
-    label: ""
-  };
-  useEffect(() => {
-    list = JSON.parse(localStorage.getItem("Data"));
-    console.log(list);
-    if (!list) {
-      hist.push("/auth/login");
-      hist.go("/auth/login");
-    }
-    if(optionsPulled.length<=0){
-      list.map(data => {
-        data.listaCedisEmpresaDto.map(cedis => {
-          listToOptions.value = cedis;
-          listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
-          optionsPulled.push(listToOptions);
-          listToOptions = {
-            value: "",
-            label: ""
-          };
-        });
-      });
-    }
-  }, [firstDate, secondDate, pullet]);
-
-  const [firstDate, setFirstDate] = useState(new Date());
-  const [secondDate, setSecondDate] = useState(new Date());
-  const [pullet, savePullet] = useState({});
-  const [cedis, saveCedis] = useState([]);
   const columns = [
     {
       name: 'ProvPartNum',
@@ -110,6 +78,43 @@ export default function Pulled(){
       sortable: true
     }
   ];
+  const namesCsv=[];
+  if(namesCsv.length<=0){
+  columns.map((data)=>{
+    namesCsv.push([data.name,data.selector]);
+   })
+  }
+  const hist = createBrowserHistory();
+  let list;
+  let listToOptions = {
+    value: "",
+    label: ""
+  };
+  useEffect(() => {
+    list = JSON.parse(localStorage.getItem("Data"));
+    if (!list) {
+      hist.push("/auth/login");
+      hist.go("/auth/login");
+    }
+    if(optionsPulled.length<=0){
+      list.map(data => {
+        data.listaCedisEmpresaDto.map(cedis => {
+          listToOptions.value = cedis;
+          listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
+          optionsPulled.push(listToOptions);
+          listToOptions = {
+            value: "",
+            label: ""
+          };
+        });
+      });
+    }
+  }, [firstDate, secondDate, pullet]);
+
+  const [firstDate, setFirstDate] = useState(new Date());
+  const [secondDate, setSecondDate] = useState(new Date());
+  const [pullet, savePullet] = useState({});
+  const [cedis, saveCedis] = useState([]);
   const initialDate = date => {
     setFirstDate(date);
   };
@@ -137,9 +142,8 @@ export default function Pulled(){
     _fechasReportesDto.fechaFinal = formatDate(secondDate);
     _fechasReportesDto.listaCedisEmpresa=cedis;
     
-   axios.post("http://localhost:3001/repossal/pulled", _fechasReportesDto)
+   axios.post("http://192.168.2.10:3001/repossal/pulled", _fechasReportesDto)
    .then(result => {
-     console.log(result)
     const  {data}=result
     if(data){
       savePullet(data);
@@ -216,6 +220,7 @@ export default function Pulled(){
           </Grid>
           <Grid item xs={3}>
               <Csv
+               namesCsv={namesCsv}
               data={pullet}
               />
           </Grid>
@@ -223,7 +228,7 @@ export default function Pulled(){
       </MuiPickersUtilsProvider>
       <TableList columns={columns}
       data={pullet}
-      title={"Reporte existencias Pulled"} />
+     />
     </Fragment>
   );
 }

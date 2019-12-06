@@ -12,11 +12,103 @@ import Select from "react-select";
 import Button from "@material-ui/core/Button";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
-import Csv from '../../layouts/csv';
-
+import Csv from "../../layouts/csv";
 
 const optionsV1 = [];
-export default function V1(){
+export default function V1() {
+  const columns = [
+    {
+      name: "#",
+      selector: "claveLPN",
+      sortable: true
+    },
+    {
+      name: "Folio",
+      selector: "documentoClienteSalida",
+      sortable: true
+    },
+    {
+      name: "FechaSalida",
+      selector: "fechaFin",
+      sortable: true
+    },
+    {
+      name: "ProvPartNum",
+      selector: "claveProductoOrigen",
+      sortable: true
+    },
+    {
+      name: "CustPartNum",
+      selector: "claveProducto",
+      sortable: true
+    },
+    {
+      name: "Description",
+      selector: "nombreProducto",
+      sortable: true
+    },
+    {
+      name: "Qty",
+      selector: "cantidad",
+      sortable: true
+    },
+    {
+      name: "Unit",
+      selector: "claveUnidadMedida",
+      sortable: true
+    },
+    {
+      name: "Peso",
+      selector: "pesoProducto",
+      sortable: true
+    },
+    {
+      name: "PrecioTotal",
+      selector: "precioTotalProducto",
+      sortable: true
+    },
+    {
+      name: "Moneda",
+      selector: "tipoDeMonedaProducto",
+      sortable: true
+    },
+    {
+      name: "Factura",
+      selector: "documentoClienteEntrada",
+      sortable: true
+    },
+    {
+      name: "Fraccion",
+      selector: "fraccionArancelaria",
+      sortable: true
+    },
+    {
+      name: "No_De_Pedidimento_Aduanal",
+      selector: "documentoProveedor",
+      sortable: true
+    },
+    {
+      name: "FechaPA",
+      selector: "fechaHoraCreacion",
+      sortable: true
+    },
+    {
+      name: "Cliente",
+      selector: "nombreDestino",
+      sortable: true
+    },
+    {
+      name: "Pais",
+      selector: "paisOrigenProducto",
+      sortable: true
+    }
+  ];
+  const namesCsv = [];
+  if (namesCsv.length <= 0) {
+    columns.map(data => {
+      namesCsv.push([data.name, data.selector]);
+    });
+  }
   const hist = createBrowserHistory();
   let list;
   let listToOptions = {
@@ -25,13 +117,12 @@ export default function V1(){
   };
   useEffect(() => {
     list = JSON.parse(localStorage.getItem("Data"));
-    console.log(list);
     if (!list) {
       hist.push("/auth/login");
       hist.go("/auth/login");
     }
-    
-    if(optionsV1.length<=0){
+
+    if (optionsV1.length <= 0) {
       list.map(data => {
         data.listaCedisEmpresaDto.map(cedis => {
           listToOptions.value = cedis;
@@ -50,93 +141,7 @@ export default function V1(){
   const [secondDate, setSecondDate] = useState(new Date());
   const [pullet, savePullet] = useState({});
   const [cedis, saveCedis] = useState([]);
-  const columns = [
-    {
-      name: '#',
-      selector: 'claveLPN',
-      sortable: true
-    },
-    {
-      name: 'Folio',
-      selector: 'documentoClienteSalida',
-      sortable: true
-    },
-    {
-      name: 'FechaSalida',
-      selector: 'fechaFin',
-      sortable: true
-    },
-    {
-      name: 'ProvPartNum',
-      selector: 'claveProductoOrigen',
-      sortable: true
-    },
-    {
-      name: 'CustPartNum',
-      selector: 'claveProducto',
-      sortable: true
-    },
-    {
-      name: 'Description',
-      selector: 'nombreProducto',
-      sortable: true
-    },
-    {
-      name: 'Qty',
-      selector: 'cantidad',
-      sortable: true
-    },
-    {
-      name: 'Unit',
-      selector: 'claveUnidadMedida',
-      sortable: true
-    },
-    {
-      name: 'Peso',
-      selector: 'pesoProducto',
-      sortable: true
-    },
-    {
-      name: 'PrecioTotal',
-      selector: 'precioTotalProducto',
-      sortable: true
-    },
-    {
-      name: 'Moneda',
-      selector: 'tipoDeMonedaProducto',
-      sortable: true
-    },
-    {
-      name: 'Factura',
-      selector: 'documentoClienteEntrada',
-      sortable: true
-    },
-    {
-      name: 'Fraccion',
-      selector: 'fraccionArancelaria',
-      sortable: true
-    },
-    {
-      name: 'No_De_Pedidimento_Aduanal',
-      selector: 'documentoProveedor',
-      sortable: true
-    },
-    {
-      name: 'FechaPA',
-      selector: 'fechaHoraCreacion',
-      sortable: true
-    },
-    {
-      name: 'Cliente',
-      selector: 'nombreDestino',
-      sortable: true
-    },
-    {
-      name: 'Pais',
-      selector: 'paisOrigenProducto',
-      sortable: true
-    }
-  ];
+
   const initialDate = date => {
     setFirstDate(date);
   };
@@ -145,37 +150,36 @@ export default function V1(){
   };
   let cedisEntreprise = {};
   const selectValue = cedis => {
-  if(cedis){
-    cedisEntreprise = cedis.map(data => {
-      return data.value;
-    });
-  saveCedis(cedisEntreprise);
-  }
-   
+    if (cedis) {
+      cedisEntreprise = cedis.map(data => {
+        return data.value;
+      });
+      saveCedis(cedisEntreprise);
+    }
   };
 
   const _fechasReportesDto = {
     fechaInicial: "",
     fechaFinal: "",
-     listaCedisEmpresa: []
+    listaCedisEmpresa: []
   };
-  const getData =  () => {
+
+  const getData = () => {
     _fechasReportesDto.fechaInicial = formatDate(firstDate);
     _fechasReportesDto.fechaFinal = formatDate(secondDate);
-    _fechasReportesDto.listaCedisEmpresa=cedis;
-    
-   axios.post("http://localhost:3001/repossal/repv1", _fechasReportesDto)
-   .then(result => {
-     console.log(result)
-    const  {data}=result
-    if(data){
-      savePullet(data);
-    }
-  }).catch(e=>{
-    console.log(e);
-  })
-  ;
-     
+    _fechasReportesDto.listaCedisEmpresa = cedis;
+
+    axios
+      .post("http://192.168.2.10:3001/repossal/repv1", _fechasReportesDto)
+      .then(result => {
+        const { data } = result;
+        if (data) {
+          savePullet(data);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
   };
 
   function formatDate(date) {
@@ -239,18 +243,13 @@ export default function V1(){
               <SearchIcon />
             </Button>
           </Grid>
-          <Grid item xs={9}>
-          </Grid>
+          <Grid item xs={9}></Grid>
           <Grid item xs={3}>
-              <Csv
-              data={pullet}
-              />
+            <Csv namesCsv={namesCsv} data={pullet} />
           </Grid>
         </Grid>
       </MuiPickersUtilsProvider>
-      <TableList columns={columns}
-      data={pullet}
-      title={"Reporte existencias Pulled"} />
+      <TableList columns={columns} data={pullet} />
     </Fragment>
   );
 }
