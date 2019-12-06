@@ -14,9 +14,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
 import Csv from '../../layouts/csv';
 
-
-const optionsV1 = [];
-export default function V1(){
+const optionsKardex = [];
+export default function Kardex() {
   const hist = createBrowserHistory();
   let list;
   let listToOptions = {
@@ -30,110 +29,78 @@ export default function V1(){
       hist.push("/auth/login");
       hist.go("/auth/login");
     }
-    
-    if(optionsV1.length<=0){
-      list.map(data => {
-        data.listaCedisEmpresaDto.map(cedis => {
-          listToOptions.value = cedis;
-          listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
-          optionsV1.push(listToOptions);
-          listToOptions = {
-            value: "",
-            label: ""
-          };
-        });
+    if(optionsKardex.length<=0){
+    list.map(data => {
+      data.listaCedisEmpresaDto.map((cedis,index) => {
+       
+        listToOptions.value = cedis;
+        listToOptions.label = `${cedis.nombreCedis}| ${cedis.nombreEmpresa}`;
+          optionsKardex.push(listToOptions);
+
+         listToOptions = {
+          value: "",
+          label: ""
+        };
       });
-    }
-  }, [firstDate, secondDate, pullet]);
+      
+    });
+  }
+  }, [firstDate, secondDate, lpn,save]);
 
   const [firstDate, setFirstDate] = useState(new Date());
   const [secondDate, setSecondDate] = useState(new Date());
-  const [pullet, savePullet] = useState({});
+  const [lpn, saveLpn] = useState({});
   const [cedis, saveCedis] = useState([]);
+  const [save,wasSave]=useState(false)
   const columns = [
     {
-      name: '#',
-      selector: 'claveLPN',
+      name: "ProvPartNum",
+      selector: "claveLPN",
       sortable: true
     },
     {
-      name: 'Folio',
-      selector: 'documentoClienteSalida',
+      name: "CustPartNum",
+      selector: "claveProductoOrigen",
       sortable: true
     },
     {
-      name: 'FechaSalida',
-      selector: 'fechaFin',
+      name: "Description",
+      selector: "claveProducto",
       sortable: true
     },
     {
-      name: 'ProvPartNum',
-      selector: 'claveProductoOrigen',
+      name: "Qty",
+      selector: "nombreProducto",
       sortable: true
     },
     {
-      name: 'CustPartNum',
-      selector: 'claveProducto',
+      name: "Unit",
+      selector: "cantidad",
       sortable: true
     },
     {
-      name: 'Description',
-      selector: 'nombreProducto',
+      name: "Serial_Number",
+      selector: "claveUnidadMedida",
       sortable: true
     },
     {
-      name: 'Qty',
-      selector: 'cantidad',
+      name: "claveLPN",
+      selector: "claveLPN",
       sortable: true
     },
     {
-      name: 'Unit',
-      selector: 'claveUnidadMedida',
+      name: "lote",
+      selector: "lote",
       sortable: true
     },
     {
-      name: 'Peso',
-      selector: 'pesoProducto',
+      name: "Receipt_Date",
+      selector: "fechaRegistro",
       sortable: true
     },
     {
-      name: 'PrecioTotal',
-      selector: 'precioTotalProducto',
-      sortable: true
-    },
-    {
-      name: 'Moneda',
-      selector: 'tipoDeMonedaProducto',
-      sortable: true
-    },
-    {
-      name: 'Factura',
-      selector: 'documentoClienteEntrada',
-      sortable: true
-    },
-    {
-      name: 'Fraccion',
-      selector: 'fraccionArancelaria',
-      sortable: true
-    },
-    {
-      name: 'No_De_Pedidimento_Aduanal',
-      selector: 'documentoProveedor',
-      sortable: true
-    },
-    {
-      name: 'FechaPA',
-      selector: 'fechaHoraCreacion',
-      sortable: true
-    },
-    {
-      name: 'Cliente',
-      selector: 'nombreDestino',
-      sortable: true
-    },
-    {
-      name: 'Pais',
-      selector: 'paisOrigenProducto',
+      name: "Invoice",
+      selector: "documentoCliente",
       sortable: true
     }
   ];
@@ -144,7 +111,7 @@ export default function V1(){
     setSecondDate(date);
   };
   let cedisEntreprise = {};
-  const selectValue = cedis => {
+  const selectValue = cedis => {  
   if(cedis){
     cedisEntreprise = cedis.map(data => {
       return data.value;
@@ -163,13 +130,13 @@ export default function V1(){
     _fechasReportesDto.fechaInicial = formatDate(firstDate);
     _fechasReportesDto.fechaFinal = formatDate(secondDate);
     _fechasReportesDto.listaCedisEmpresa=cedis;
-    
-   axios.post("http://localhost:3001/repossal/repv1", _fechasReportesDto)
+    console.log(_fechasReportesDto);
+   axios.post("http://localhost:3001/reposent/kardex", _fechasReportesDto)
    .then(result => {
      console.log(result)
     const  {data}=result
     if(data){
-      savePullet(data);
+      saveLpn(data);
     }
   }).catch(e=>{
     console.log(e);
@@ -223,7 +190,7 @@ export default function V1(){
           </Grid>
           <Grid item xs={6}>
             <Select
-              options={optionsV1}
+              options={optionsKardex}
               className="basic-multi-select"
               isMulti
               onChange={selectValue}
@@ -243,14 +210,14 @@ export default function V1(){
           </Grid>
           <Grid item xs={3}>
               <Csv
-              data={pullet}
+              data={lpn}
               />
           </Grid>
         </Grid>
       </MuiPickersUtilsProvider>
       <TableList columns={columns}
-      data={pullet}
-      title={"Reporte existencias Pulled"} />
+      data={lpn}
+      title={"Reporte existencias LPN"} />
     </Fragment>
   );
 }

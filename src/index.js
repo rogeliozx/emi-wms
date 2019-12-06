@@ -14,7 +14,7 @@ render(
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route path="/auth" component={Login} />
-      <Redirect from="/" to="/admin/dashboard" />
+      <Redirect from="/" to="/auth/login" />
     </Switch>
   </Router>,
   document.getElementById("root")

@@ -5,16 +5,9 @@ import ExistenciasLpn from '../views/ReporteExistenciasLpn/Lpn';
 import Pulled from '../views/ReportePullet/Pullet';
 import RecibidosLpn from '../views/ReporteReciboLpn/RecibidoLpn';
 import V1 from '../views/ReporteV1/V1';
-
+import Kardex from '../views/Kardex/Kardex';
 
 const adminRoutes = [
-  // {
-  //   path: '/dashboard',
-  //   name: 'Dashboard',
-  //   icon: Dashboard,
-  //   component: DashboardPage,
-  //   layout: '/admin'
-  // },
   {
     path: '/lpn',
     name: 'Existencias LPN',
@@ -48,6 +41,13 @@ const adminRoutes = [
     name: 'Reporte Existencias Lote',
     icon: 'content_paste',
     component: Lote,
+    layout: '/admin'
+  },
+  {
+    path: '/kardex',
+    name: 'Reporte Kardex',
+    icon: 'content_paste',
+    component: Kardex,
     layout: '/admin'
   }
 ];

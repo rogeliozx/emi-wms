@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react';
-import {makeStyles} from '@material-ui/core';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import styles from 'assets/jss/material-dashboard-react/layouts/adminStyle.js';
 import loginRoutes from '../routes/login-routes';
@@ -22,11 +21,11 @@ const switchRoutes = (
   </Switch>
 );
 
-const useStyles = makeStyles(styles);
-
 function Login(props){
+  
   return (
     <Fragment>
+  
       {switchRoutes}
     </Fragment>
   );
